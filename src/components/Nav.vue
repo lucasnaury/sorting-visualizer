@@ -1,15 +1,18 @@
 <script setup>
-import {ref, reactive, computed} from 'vue'
-import { useArrayStore } from '../stores/array';
+import { ref, reactive, computed } from 'vue'
+import { useStorage } from '@vueuse/core'
+import { useArrayStore } from '../stores/array'
+import sortTypes from '../types/sort'
 
 const arrayStore = useArrayStore()
 
-const sortMethods = ["Quick Sort","Heap Sort","Selection Sort","Insertion Sort","Bubble Sort"]
-
-const selectedAlgorithm = ref(sortMethods[0])
+const sortMethods =  Array.from(Object.values(sortTypes).values())
 const dropdownVisible = ref(false)
 
+const selectedAlgorithm = ref(useStorage('selectedAlgorithm',sortMethods[0]))
 const dropdownMethods = computed(()=> sortMethods.filter(meth => meth != selectedAlgorithm.value))
+
+
 
 const minLength = arrayStore.minArrayLength
 const maxLength = arrayStore.maxArrayLength
@@ -38,7 +41,7 @@ const maxLength = arrayStore.maxArrayLength
                 <img src="../assets/icons/random.svg" />
                 Randomize
             </button>
-            <button id="sort">
+            <button id="sort" @click="arrayStore.sort(selectedAlgorithm)">
                 <img src="../assets/icons/sort.svg" />
                 Sort
             </button>
@@ -51,12 +54,12 @@ const maxLength = arrayStore.maxArrayLength
 nav{
     display: flex;
     align-items: center;
-    height: 60px;
+    height: 50px;
     background: var(--dark-color);
     h1{
         margin-left: 50px;
         margin-right: auto;
-        font-size: 24px;
+        font-size: 20px;
     }
     .middle{
         display: flex;
@@ -66,33 +69,38 @@ nav{
         .sort-type{
             position: relative;
             display: flex;
-            margin: 0 50px;        
+            margin-right:50px;        
             cursor: pointer;
     
             #dropdown-text{
                 text-align: right;
                 padding-right: 12px;
-                font-size: 20px;
+                font-size: 16px;
             }
             #dropdown{
                 position: absolute;
                 top: 100%;
                 right: 0;
-                width: 100%;
+                width: auto;
                 background: var(--dark-color);
                 border-radius: 0 0 5px 5px;
                 list-style-type: none;
                 pointer-events: none;
                 transform: translateY(-10px);
                 margin: 0;
-                padding: 10px;
+                padding: 8px 0;
                 opacity: 0;
                 transition: transform 150ms ease-out, opacity 300ms ease-out;
+                    width: max-content;
                 
                 li{
-                    padding: 8px 12px;
+                    padding: 10px 22px;
                     font-size: 15px;
                     user-select: none;
+
+                    &:hover{
+                        background: transparentize(white, .95);
+                    }
                 }
                 
                 
@@ -109,11 +117,11 @@ nav{
         }
         .array-length{
             display: flex;
-            margin: 0 50px;
+            margin-left: 50px;
             align-items: center;
     
             h2{
-                font-size: 18px;
+                font-size: 16px;
                 padding-right: 20px;
             }
             input{
@@ -138,18 +146,18 @@ nav{
             justify-content: center;
 
             img{
-                width: 28px;
-                height: 28px;
+                width: 22px;
+                height: 22px;
                 padding-right: 9px;
             }
         }
         #sort{
             background: var(--accent-color);
-            font-size: 20px;
+            font-size: 16px;
         }
         #randomize{
             background: var(--accent-color-light);
-            font-size: 18px;
+            font-size: 15px;
         }
     }
 }

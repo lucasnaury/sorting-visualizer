@@ -1,4 +1,8 @@
 import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
+
+import SortTypes from '../types/sort'
+import * as SortMethods from '../common/sort-methods.js' 
 
 const getRandomIntInInterval = (min, max) => {
     return Math.floor(Math.random() * (max - min) + min);
@@ -11,10 +15,10 @@ export const useArrayStore = defineStore('arrayStore', {
           minArrayLength: 25,
           maxArrayLength: 100,
 
-          minArrayNumber: 10,
+          minArrayNumber: 5,
           maxArrayNumber: 100,
 
-          arrayLength: 55,
+          arrayLength: useStorage('arrayLength', 55),
           array: [],
           maxNumberInArray: 0
         }
@@ -31,6 +35,15 @@ export const useArrayStore = defineStore('arrayStore', {
                 if (e > this.maxNumberInArray) this.maxNumberInArray = e;
             }
             this.array = newArray;    
+        },
+        sort(method){
+            switch(method){
+                case SortTypes.QuickSort:     SortMethods.QuickSort();break;
+                case SortTypes.HeapSort:      SortMethods.HeapSort();break;
+                case SortTypes.SelectionSort: SortMethods.SelectionSort();break;
+                case SortTypes.InsertionSort: SortMethods.InsertionSort();break;
+                case SortTypes.BubbleSort:    SortMethods.BubbleSort();break;
+            }
         }
     }
 })

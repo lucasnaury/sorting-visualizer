@@ -1,6 +1,6 @@
 <script setup>
 import { useArrayStore } from '../stores/array'
-import { ref, reactive, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 const arrayStore = useArrayStore()
 
@@ -27,13 +27,16 @@ onMounted(() => {
 <style scoped lang="scss">
 .graph-container{
     height: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .graph{
         display: flex;
         align-items: baseline;
         justify-content: center;
         overflow: hidden;
-        height: 80%;
+        height: calc(100% - 50px);
         .bar{
             background: var(--graph-color);
             height: 300px;
@@ -46,7 +49,7 @@ onMounted(() => {
         display: flex;
         align-items: center;
         justify-content: space-around;
-        width: 100%;
+        width: max(100%, 400px);
         padding: 0;
         margin: 30px 0 0;
         list-style-type: none;
@@ -55,7 +58,7 @@ onMounted(() => {
         li{
             position: relative;
             color: transparentize(white, 0.4);
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 300;
 
             &::before{

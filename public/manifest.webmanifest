@@ -1,0 +1,21 @@
+{
+    "name": "Sorting Vizualizer",
+    "short_name": "Sorting Vizualizer",
+    "start_url": "/",
+    "description": "Application VueJS permettant de visualiser les étapes des algorithmes de tris les plus connus",
+    "icons": [
+      {
+        "src": "./img/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "./img/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "theme_color": "#2A3D4A",
+    "background_color": "#2C4251",
+    "display": "standalone"
+}
