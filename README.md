@@ -1,7 +1,8 @@
-# Vue 3 + Vite
+# Sorting visualizer
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+In progress...
 
-## Recommended IDE Setup
+This web app lets you select which algorithm you want to visualize as well as the size of the array you want to sort.  
+Then, you can start the process, and see each step that the algorithm performs. This allows you to understand better how each algorithm works, and its specificities.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+It was built using VueJS 3, JS, SCSS. I also used Pinia as the store to share data between Vue components, as well as the localStorage API to keep some parameters for the next visit.
