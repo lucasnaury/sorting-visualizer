@@ -47,12 +47,20 @@ export const InsertionSort = async () => {
             arrayStore.colorsArray[j] = 1
             arrayStore.colorsArray[j - 1] = 1
 
+            await waitForMs(delay)
+
             swap(j, j - 1)
+            
+            //Visualization (Put back the item in sorted color)
+            arrayStore.colorsArray[j] = 3
 
             await waitForMs(delay)
 
             j--
         }
+        //Visualization (sorted)
+        arrayStore.colorsArray[j] = 3
+        arrayStore.colorsArray[j - 1] = 3
 
     }
 
