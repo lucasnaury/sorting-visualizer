@@ -6,11 +6,11 @@ import sortTypes from '../types/sort'
 
 const arrayStore = useArrayStore()
 
-const sortMethods =  Array.from(Object.values(sortTypes).values())
+const sortMethods = Array.from(Object.values(sortTypes).values())
 const dropdownVisible = ref(false)
 
-const selectedAlgorithm = ref(useStorage('selectedAlgorithm',sortMethods[0]))
-const dropdownMethods = computed(()=> sortMethods.filter(meth => meth != selectedAlgorithm.value))
+const selectedAlgorithm = ref(useStorage('selectedAlgorithm', sortMethods[0]))
+const dropdownMethods = computed(() => sortMethods.filter(meth => meth != selectedAlgorithm.value))
 
 
 
@@ -24,18 +24,21 @@ const maxLength = arrayStore.maxArrayLength
         <h1>Sorting Visualizer</h1>
         <div class="middle">
             <div class="sort-type" @click='dropdownVisible = !dropdownVisible'>
-                <h2 id="dropdown-text">{{selectedAlgorithm}}</h2>
-                <ul id="dropdown" :class="dropdownVisible ? 'visible' : ''">
-                    <li v-for="method in dropdownMethods" :key="method" @click="selectedAlgorithm = method">{{ method }}</li>
+                <h2 id="dropdown-text">{{ selectedAlgorithm }}</h2>
+                <ul id="dropdown" :class="dropdownVisible && !arrayStore.isSorting ? 'visible' : ''">
+                    <li v-for="method in dropdownMethods" :key="method" @click="selectedAlgorithm = method">{{ method }}
+                    </li>
                 </ul>
                 <img src="../assets/icons/dropdown.svg" />
 
             </div>
             <div class="array-length">
                 <h2>Array length :</h2>
-                <input type="range" name="" id="" :min="minLength" :max="maxLength" v-model.number="arrayStore.arrayLength" @input="arrayStore.randomizeArray"/>
+                <input type="range" name="" id="" :min="minLength" :max="maxLength"
+                    v-model.number="arrayStore.arrayLength" @input="arrayStore.randomizeArray"
+                    :disabled="arrayStore.isSorting" />
             </div>
-        </div>            
+        </div>
         <div class="buttons">
             <button id="randomize" @click="arrayStore.randomizeArray()">
                 <img src="../assets/icons/random.svg" />
@@ -51,33 +54,36 @@ const maxLength = arrayStore.maxArrayLength
 
 
 <style scoped lang="scss">
-nav{
+nav {
     display: flex;
     align-items: center;
     height: 50px;
     background: var(--dark-color);
-    h1{
+
+    h1 {
         margin-left: 50px;
         margin-right: auto;
         font-size: 20px;
     }
-    .middle{
+
+    .middle {
         display: flex;
         align-items: center;
         justify-content: space-around;
 
-        .sort-type{
+        .sort-type {
             position: relative;
             display: flex;
-            margin-right:50px;        
+            margin-right: 50px;
             cursor: pointer;
-    
-            #dropdown-text{
+
+            #dropdown-text {
                 text-align: right;
                 padding-right: 12px;
                 font-size: 16px;
             }
-            #dropdown{
+
+            #dropdown {
                 position: absolute;
                 top: 100%;
                 right: 0;
@@ -91,51 +97,56 @@ nav{
                 padding: 8px 0;
                 opacity: 0;
                 transition: transform 150ms ease-out, opacity 300ms ease-out;
-                    width: max-content;
-                
-                li{
+                width: max-content;
+
+                li {
                     padding: 10px 22px;
                     font-size: 15px;
                     user-select: none;
 
-                    &:hover{
+                    &:hover {
                         background: transparentize(white, .95);
                     }
                 }
-                
-                
-                &.visible{
+
+
+                &.visible {
                     pointer-events: auto;
                     transform: translateY(0);
                     opacity: 1;
                 }
             }
-            img{
+
+            img {
                 width: 16px;
                 padding-top: 2px;
             }
         }
-        .array-length{
+
+        .array-length {
             display: flex;
             margin-left: 50px;
             align-items: center;
-    
-            h2{
+
+            h2 {
                 font-size: 16px;
                 padding-right: 20px;
             }
-            input{
-                height: 4px;            
+
+            input {
+                height: 4px;
                 cursor: ew-resize;
                 accent-color: var(--accent-color-light);
             }
         }
-    }    
-    .buttons{
+    }
+
+    .buttons {
         display: flex;
         margin-left: auto;
         height: 100%;
-        button{
+
+        button {
             all: unset;
             height: 100%;
             padding: 0 20px;
@@ -145,17 +156,19 @@ nav{
             align-items: center;
             justify-content: center;
 
-            img{
+            img {
                 width: 22px;
                 height: 22px;
                 padding-right: 9px;
             }
         }
-        #sort{
+
+        #sort {
             background: var(--accent-color);
             font-size: 16px;
         }
-        #randomize{
+
+        #randomize {
             background: var(--accent-color-light);
             font-size: 15px;
         }
