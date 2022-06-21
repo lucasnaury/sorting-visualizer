@@ -19,9 +19,50 @@ export const HeapSort = () => {
     arrayStore.isSorting = false
 }
 
-export const SelectionSort = () => {
+export const SelectionSort = async () => {
     console.log("SelectionSort")
     const arrayStore = useArrayStore()
+
+    let debut = 0
+
+    while (debut < arrayStore.arrayLength) {
+        let current_min_index = debut//Reset min index
+
+        //Get the min in the unsorted part
+        for (let i = debut; i < arrayStore.arrayLength; i++) {
+
+            //Visualization (comparison)
+            const previous_min_index = current_min_index //Save variable to remove color even when value changed
+            arrayStore.colorsArray[i] = 1
+            arrayStore.colorsArray[previous_min_index] = 1
+            await waitForMs(delay)
+
+            if (arrayStore.array[i] < arrayStore.array[current_min_index]) {//If new min, set current_min_index to new min index
+                current_min_index = i
+            }
+
+            //Visualization (comparison)
+            arrayStore.colorsArray[i] = 0
+            arrayStore.colorsArray[previous_min_index] = 0
+
+        }
+
+        swap(debut, current_min_index)
+
+        await waitForMs(delay)
+
+        //Visualization (sorted)
+        arrayStore.colorsArray[debut] = 3
+        //Visualization (not sorted at all, swapped with sorted)
+        if (debut != current_min_index) arrayStore.colorsArray[current_min_index] = 0
+
+
+        await waitForMs(delay)
+
+        debut++
+
+    }
+
 
     //Reset
     arrayStore.isSorting = false
@@ -50,7 +91,7 @@ export const InsertionSort = async () => {
             await waitForMs(delay)
 
             swap(j, j - 1)
-            
+
             //Visualization (Put back the item in sorted color)
             arrayStore.colorsArray[j] = 3
 
@@ -84,7 +125,7 @@ export const BubbleSort = async () => {
 
     let isSorted = false
 
-    let fin = arrayStore.array.length
+    let fin = arrayStore.arrayLength
     while (!isSorted) {
         if (fin > 1) {
             for (let i = 0; i < fin - 1; i++) {
