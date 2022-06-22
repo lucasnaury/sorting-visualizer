@@ -47,11 +47,12 @@ export const useArrayStore = defineStore('arrayStore', {
                 this.isSorting = true
 
                 switch (method) {
+                    case SortTypes.BubbleSort: SortMethods.BubbleSort(); break;
+                    case SortTypes.InsertionSort: SortMethods.InsertionSort(); break;
+                    case SortTypes.SelectionSort: SortMethods.SelectionSort(); break;
+                    case SortTypes.MergeSort: SortMethods.MergeSort(); break;
                     case SortTypes.QuickSort: SortMethods.QuickSort(); break;
                     case SortTypes.HeapSort: SortMethods.HeapSort(); break;
-                    case SortTypes.SelectionSort: SortMethods.SelectionSort(); break;
-                    case SortTypes.InsertionSort: SortMethods.InsertionSort(); break;
-                    case SortTypes.BubbleSort: SortMethods.BubbleSort(); break;
                 }
 
             }

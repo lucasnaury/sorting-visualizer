@@ -1,9 +1,10 @@
 export const sortMethods = {
-    QuickSort: "Quick Sort",
-    HeapSort: "Heap Sort",
-    SelectionSort: "Selection Sort",
+    BubbleSort: "Bubble Sort",
     InsertionSort: "Insertion Sort",
-    BubbleSort: "Bubble Sort"
+    SelectionSort: "Selection Sort",
+    MergeSort: "Merge Sort",
+    QuickSort: "Quick Sort",
+    HeapSort: "Heap Sort"
 }
 
 export default sortMethods

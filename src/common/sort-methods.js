@@ -1,5 +1,5 @@
 import { useArrayStore } from '../stores/array'
-import { swap, waitForMs } from './utilities'
+import { swap, insert, waitForMs } from './utilities'
 
 const delay = 20
 
@@ -17,6 +17,49 @@ export const HeapSort = () => {
 
     //Reset
     arrayStore.isSorting = false
+}
+
+export const MergeSort = () => {
+    console.log("MergeSort")
+    const arrayStore = useArrayStore()
+
+    arrayStore.array = MergeSortStep(arrayStore.array)
+
+    //Reset
+    arrayStore.isSorting = false
+}
+
+const MergeSortStep = (array) => {
+
+    if (array.length <= 1) return array
+
+    const middleIndex = Math.floor(array.length / 2)
+
+    let arrayLeft = array.slice(0, middleIndex)
+    let arrayRight = array.slice(middleIndex, array.length)
+
+    return merge(MergeSortStep(arrayLeft), MergeSortStep(arrayRight))
+
+}
+
+const merge = (arrayLeft, arrayRight) => {
+    console.log("Merge", arrayLeft.join(','), "     ", arrayRight.join(','))
+
+    for (let i = 0; i < arrayLeft.length && arrayRight.length > 0; i++) {
+        while (arrayRight[0] < arrayLeft[i]) {//Si on peut insérer le premier élément de arrayRight dans arrayLeft avant l'index i
+
+            arrayLeft = insert(arrayLeft, arrayRight.shift(), i) //On l'insère avant i et on le supprime de ArrayLeft
+
+        }
+    }
+
+
+    arrayLeft = arrayLeft.concat(arrayRight)//Add remaining right items at the end of the left array
+
+
+
+    return arrayLeft
+
 }
 
 export const SelectionSort = async () => {

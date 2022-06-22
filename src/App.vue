@@ -1,6 +1,14 @@
 <script setup>
 import Nav from './components/Nav.vue'
 import Graph from './components/Graph.vue'
+import { onMounted } from 'vue';
+import { insert } from './common/utilities'
+
+onMounted(() => {
+  const arr = [1, 2, 3, 5]
+  console.log(arr.slice(0, 2))
+  console.log(arr)
+})
 </script>
 
 <template>

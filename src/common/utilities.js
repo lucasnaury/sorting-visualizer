@@ -15,3 +15,8 @@ export const swap = (indexA, indexB) => {
     arrayStore.colorsArray[indexA] = 2
     arrayStore.colorsArray[indexB] = 2
 }
+
+export const insert = (array, item, index) => {
+    array.splice(index, 0, item);
+    return array
+}
