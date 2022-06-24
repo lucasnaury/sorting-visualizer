@@ -12,7 +12,7 @@ export const useArrayStore = defineStore('arrayStore', {
     state: () => {
         return {
             // all these properties will have their type inferred automatically
-            minArrayLength: 25,
+            minArrayLength: 2,
             maxArrayLength: 100,
 
             minArrayNumber: 5,
@@ -20,6 +20,7 @@ export const useArrayStore = defineStore('arrayStore', {
 
             arrayLength: useStorage('arrayLength', 55),
             array: [],
+            savedArray: [],
             colorsArray: [],
             maxNumberInArray: 0,
 
@@ -39,6 +40,7 @@ export const useArrayStore = defineStore('arrayStore', {
                     if (e > this.maxNumberInArray) this.maxNumberInArray = e;
                 }
                 this.array = newArray;
+                this.savedArray = [...newArray];
                 this.colorsArray = new Array(this.arrayLength).fill(0);
             }
         },

@@ -1,10 +1,10 @@
 import { useArrayStore } from '../stores/array'
-import { swap, insert, waitForMs } from './utilities'
+import { swap, move, insert, remove, waitForMs } from './utilities'
 
-const delay = 20
+const delay = 200
 
 export const QuickSort = () => {
-    console.log("QuickSort")
+    console.log("Quick Sort")
     const arrayStore = useArrayStore()
 
     //Reset
@@ -12,58 +12,96 @@ export const QuickSort = () => {
 }
 
 export const HeapSort = () => {
-    console.log("HeapSort")
+    console.log("Heap Sort")
     const arrayStore = useArrayStore()
 
     //Reset
     arrayStore.isSorting = false
 }
 
-export const MergeSort = () => {
-    console.log("MergeSort")
+
+
+
+export const MergeSort = async () => {//PROBLEM, INFINITE RECURSION
+    console.log("Merge Sort")
     const arrayStore = useArrayStore()
 
-    arrayStore.array = MergeSortStep(arrayStore.array)
+    await MergeSortStep(arrayStore, 0, arrayStore.arrayLength)
 
     //Reset
     arrayStore.isSorting = false
 }
 
-const MergeSortStep = (array) => {
+const MergeSortStep = async (arrayStore, start, end) => { //Start inclus, end exclus
 
-    if (array.length <= 1) return array
+    if (end - start <= 1) return [start, end] //If only 1 or 0 item
 
-    const middleIndex = Math.floor(array.length / 2)
+    const middleIndex = Math.floor((start + end) / 2) //On "coupe" l'array en 2
 
-    let arrayLeft = array.slice(0, middleIndex)
-    let arrayRight = array.slice(middleIndex, array.length)
+    //APPELS RECURSIFS
+    const [leftStart, leftEnd] = await MergeSortStep(arrayStore, start, middleIndex)
+    const [rightStart, rightEnd] = await MergeSortStep(arrayStore, middleIndex, end)
 
-    return merge(MergeSortStep(arrayLeft), MergeSortStep(arrayRight))
+    return await merge(arrayStore, leftStart, leftEnd, rightEnd)
 
 }
 
-const merge = (arrayLeft, arrayRight) => {
-    console.log("Merge", arrayLeft.join(','), "     ", arrayRight.join(','))
+const merge = async (arrayStore, leftStart, middle, rightEnd) => {
 
-    for (let i = 0; i < arrayLeft.length && arrayRight.length > 0; i++) {
-        while (arrayRight[0] < arrayLeft[i]) {//Si on peut insérer le premier élément de arrayRight dans arrayLeft avant l'index i
+    for (let i = 0; i < middle - leftStart && rightEnd - middle > 0; i++) {
+        while (middle < rightEnd && arrayStore.array[middle] < arrayStore.array[leftStart + i]) {//Si on peut insérer le premier élément de arrayRight dans arrayLeft avant l'index i
 
-            arrayLeft = insert(arrayLeft, arrayRight.shift(), i) //On l'insère avant i et on le supprime de ArrayLeft
+            //Visualization (comparison)
+            arrayStore.colorsArray[middle] = 1
+            arrayStore.colorsArray[leftStart + i] = 1
+            await waitForMs(delay)
+
+            //Visualization (before move)
+            arrayStore.colorsArray[middle] = 2
+
+            await waitForMs(delay / 2)
+
+            arrayStore.array = move(arrayStore.array, middle, leftStart + i)//On insère le premier élément de l'array de droite dès que l'on peut
+
+            //Visualization (after move)
+            arrayStore.colorsArray[middle] = 3
+            arrayStore.colorsArray[leftStart + i] = 2
+            await waitForMs(delay / 2)
+
+            //Visualization (sorted)
+            arrayStore.colorsArray[leftStart + i] = 3
+            await waitForMs(delay)
+
+
+
+            middle++ //Le move agrandit la taille de l'array de gauche et diminue celui de droite            
+            i++//Et on peut directement décaler à l'indice d'après car on sait que arrayRight est trié
+
+
+        }
+        if (middle == rightEnd) {//If no element left in right array, last element is well placed
+            arrayStore.colorsArray[middle - 1] = 3
+            await waitForMs(delay)
+        } else {//If right element bigger, leftStart+i element is already well placed
+            arrayStore.colorsArray[leftStart + i] = 3
+            await waitForMs(delay)
 
         }
     }
 
+    //Visualization (put all remaining right items as sorted)
+    for (let i = middle; i < rightEnd; i++) {
+        arrayStore.colorsArray[i] = 3
+    }
 
-    arrayLeft = arrayLeft.concat(arrayRight)//Add remaining right items at the end of the left array
-
-
-
-    return arrayLeft
-
+    return [leftStart, rightEnd]
 }
 
+
+
+
 export const SelectionSort = async () => {
-    console.log("SelectionSort")
+    console.log("Selection Sort")
     const arrayStore = useArrayStore()
 
     let debut = 0
@@ -90,9 +128,9 @@ export const SelectionSort = async () => {
 
         }
 
-        swap(debut, current_min_index)
+        //Swap
+        await swap(debut, current_min_index)
 
-        await waitForMs(delay)
 
         //Visualization (sorted)
         arrayStore.colorsArray[debut] = 3
@@ -115,7 +153,7 @@ export const SelectionSort = async () => {
 
 
 export const InsertionSort = async () => {
-    console.log("InsertionSort")
+    console.log("Insertion Sort")
     const arrayStore = useArrayStore()
 
 
@@ -130,21 +168,22 @@ export const InsertionSort = async () => {
             //Visualization (comparison)
             arrayStore.colorsArray[j] = 1
             arrayStore.colorsArray[j - 1] = 1
-
             await waitForMs(delay)
 
-            swap(j, j - 1)
+            //Swap
+            await swap(j, j - 1, delay)
+
 
             //Visualization (Put back the item in sorted color)
             arrayStore.colorsArray[j] = 3
-
-            await waitForMs(delay)
 
             j--
         }
         //Visualization (sorted)
         arrayStore.colorsArray[j] = 3
         arrayStore.colorsArray[j - 1] = 3
+
+        await waitForMs(delay)
 
     }
 
@@ -157,13 +196,8 @@ export const InsertionSort = async () => {
 
 
 
-
-
-
-
-
 export const BubbleSort = async () => {
-    console.log("BubbleSort")
+    console.log("Bubble Sort")
     const arrayStore = useArrayStore()
 
     let isSorted = false
@@ -172,6 +206,7 @@ export const BubbleSort = async () => {
     while (!isSorted) {
         if (fin > 1) {
             for (let i = 0; i < fin - 1; i++) {
+
                 //Visualization (comparison)
                 arrayStore.colorsArray[i] = 1
                 arrayStore.colorsArray[i + 1] = 1
@@ -179,9 +214,11 @@ export const BubbleSort = async () => {
 
                 //Compare both values
                 if (arrayStore.array[i] > arrayStore.array[i + 1]) {//If wrong order, swap them
-                    swap(i, i + 1)
-                    await waitForMs(delay)
+
+                    //Swap
+                    await swap(i, i + 1, delay)
                 }
+
                 //Visualization
                 arrayStore.colorsArray[i] = 0
                 if (i != fin - 2) {//If it's not last item

@@ -29,7 +29,7 @@ onMounted(() => {
         </div>
         <ul className="legend">
             <li>Comparison</li>
-            <li>Swap</li>
+            <li>Swap / Move</li>
             <li>Sorted</li>
         </ul>
     </div>

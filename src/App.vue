@@ -2,12 +2,13 @@
 import Nav from './components/Nav.vue'
 import Graph from './components/Graph.vue'
 import { onMounted } from 'vue';
-import { insert } from './common/utilities'
+import { move, insert, remove } from './common/utilities'
+import { MergeSort } from './common/sort-methods';
 
 onMounted(() => {
-  const arr = [1, 2, 3, 5]
-  console.log(arr.slice(0, 2))
-  console.log(arr)
+  const arr = [0, 1, 2, 3, 4, 5]
+
+  console.log(move(arr, 0, 5))
 })
 </script>
 
