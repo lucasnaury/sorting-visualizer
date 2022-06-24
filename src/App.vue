@@ -29,6 +29,7 @@ onMounted(() => {
 
   --accent-color: #4DA7DB;
   --accent-color-light: #58AEDF;
+  --stop-color: #db3434;
 
   --graph-color: #5BC0BE;
   --graph-comparison-color: #FC6161;
