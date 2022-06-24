@@ -4,6 +4,8 @@ import { useStorage } from '@vueuse/core'
 import { useArrayStore } from '../stores/array'
 import sortTypes from '../types/sort'
 
+import stop from '../assets/icons/stop.svg'
+
 const arrayStore = useArrayStore()
 
 const sortMethods = Array.from(Object.values(sortTypes).values())
@@ -44,9 +46,14 @@ const maxLength = arrayStore.maxArrayLength
                 <img src="../assets/icons/random.svg" />
                 Randomize
             </button>
-            <button id="sort" @click="arrayStore.sort(selectedAlgorithm)">
+
+            <button id="sort" @click="arrayStore.sort(selectedAlgorithm)" v-if="!arrayStore.isSorting">
                 <img src="../assets/icons/sort.svg" />
                 Sort
+            </button>
+            <button id="stop" @click="arrayStore.delay = 0" v-else>
+                <img :src="stop" />
+                Finish
             </button>
         </div>
     </nav>
@@ -163,15 +170,21 @@ nav {
             }
         }
 
+        #randomize {
+            background: var(--accent-color-light);
+            font-size: 15px;
+        }
+
         #sort {
             background: var(--accent-color);
             font-size: 16px;
         }
 
-        #randomize {
-            background: var(--accent-color-light);
-            font-size: 15px;
+        #stop {
+            background: var(--stop-color);
+            font-size: 16px;
         }
+
     }
 }
 </style>

@@ -1,22 +1,18 @@
 import { useArrayStore } from '../stores/array'
-import { swap, move, insert, remove, waitForMs } from './utilities'
+import { swap, move, waitForMs } from './utilities'
 
-const delay = 200
 
-export const QuickSort = () => {
+export const QuickSort = async () => {
     console.log("Quick Sort")
     const arrayStore = useArrayStore()
 
-    //Reset
-    arrayStore.isSorting = false
 }
 
-export const HeapSort = () => {
+export const HeapSort = async () => {
     console.log("Heap Sort")
     const arrayStore = useArrayStore()
 
-    //Reset
-    arrayStore.isSorting = false
+
 }
 
 
@@ -28,8 +24,6 @@ export const MergeSort = async () => {//PROBLEM, INFINITE RECURSION
 
     await MergeSortStep(arrayStore, 0, arrayStore.arrayLength)
 
-    //Reset
-    arrayStore.isSorting = false
 }
 
 const MergeSortStep = async (arrayStore, start, end) => { //Start inclus, end exclus
@@ -54,23 +48,23 @@ const merge = async (arrayStore, leftStart, middle, rightEnd) => {
             //Visualization (comparison)
             arrayStore.colorsArray[middle] = 1
             arrayStore.colorsArray[leftStart + i] = 1
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
 
             //Visualization (before move)
             arrayStore.colorsArray[middle] = 2
 
-            await waitForMs(delay / 2)
+            await waitForMs(arrayStore.delay / 2)
 
             arrayStore.array = move(arrayStore.array, middle, leftStart + i)//On insère le premier élément de l'array de droite dès que l'on peut
 
             //Visualization (after move)
             arrayStore.colorsArray[middle] = 3
             arrayStore.colorsArray[leftStart + i] = 2
-            await waitForMs(delay / 2)
+            await waitForMs(arrayStore.delay / 2)
 
             //Visualization (sorted)
             arrayStore.colorsArray[leftStart + i] = 3
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
 
 
 
@@ -81,10 +75,10 @@ const merge = async (arrayStore, leftStart, middle, rightEnd) => {
         }
         if (middle == rightEnd) {//If no element left in right array, last element is well placed
             arrayStore.colorsArray[middle - 1] = 3
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
         } else {//If right element bigger, leftStart+i element is already well placed
             arrayStore.colorsArray[leftStart + i] = 3
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
 
         }
     }
@@ -116,7 +110,7 @@ export const SelectionSort = async () => {
             const previous_min_index = current_min_index //Save variable to remove color even when value changed
             arrayStore.colorsArray[i] = 1
             arrayStore.colorsArray[previous_min_index] = 1
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
 
             if (arrayStore.array[i] < arrayStore.array[current_min_index]) {//If new min, set current_min_index to new min index
                 current_min_index = i
@@ -138,15 +132,13 @@ export const SelectionSort = async () => {
         if (debut != current_min_index) arrayStore.colorsArray[current_min_index] = 0
 
 
-        await waitForMs(delay)
+        await waitForMs(arrayStore.delay)
 
         debut++
 
     }
 
 
-    //Reset
-    arrayStore.isSorting = false
 }
 
 
@@ -168,10 +160,10 @@ export const InsertionSort = async () => {
             //Visualization (comparison)
             arrayStore.colorsArray[j] = 1
             arrayStore.colorsArray[j - 1] = 1
-            await waitForMs(delay)
+            await waitForMs(arrayStore.delay)
 
             //Swap
-            await swap(j, j - 1, delay)
+            await swap(j, j - 1, arrayStore.delay)
 
 
             //Visualization (Put back the item in sorted color)
@@ -183,14 +175,11 @@ export const InsertionSort = async () => {
         arrayStore.colorsArray[j] = 3
         arrayStore.colorsArray[j - 1] = 3
 
-        await waitForMs(delay)
+        await waitForMs(arrayStore.delay)
 
     }
 
 
-
-    //Reset
-    arrayStore.isSorting = false
 }
 
 
@@ -210,13 +199,13 @@ export const BubbleSort = async () => {
                 //Visualization (comparison)
                 arrayStore.colorsArray[i] = 1
                 arrayStore.colorsArray[i + 1] = 1
-                await waitForMs(delay)
+                await waitForMs(arrayStore.delay)
 
                 //Compare both values
                 if (arrayStore.array[i] > arrayStore.array[i + 1]) {//If wrong order, swap them
 
                     //Swap
-                    await swap(i, i + 1, delay)
+                    await swap(i, i + 1, arrayStore.delay)
                 }
 
                 //Visualization
@@ -239,8 +228,6 @@ export const BubbleSort = async () => {
             isSorted = true
         }
     }
-    //Reset
-    arrayStore.isSorting = false
 
 
 }

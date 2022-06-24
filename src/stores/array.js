@@ -24,7 +24,9 @@ export const useArrayStore = defineStore('arrayStore', {
             colorsArray: [],
             maxNumberInArray: 0,
 
-            isSorting: false
+            isSorting: false,
+            isSorted: false,
+            delay: 20
         }
     },
     actions: {
@@ -39,23 +41,32 @@ export const useArrayStore = defineStore('arrayStore', {
                     newArray.push(e);
                     if (e > this.maxNumberInArray) this.maxNumberInArray = e;
                 }
+
                 this.array = newArray;
                 this.savedArray = [...newArray];
+
+                this.isSorted = false
                 this.colorsArray = new Array(this.arrayLength).fill(0);
             }
         },
-        sort(method) {
-            if (this.isSorting == false) {
+        async sort(method) {
+            if (this.isSorting == false && this.isSorted == false) {
+                const initialDelay = this.delay
+
                 this.isSorting = true
 
                 switch (method) {
-                    case SortTypes.BubbleSort: SortMethods.BubbleSort(); break;
-                    case SortTypes.InsertionSort: SortMethods.InsertionSort(); break;
-                    case SortTypes.SelectionSort: SortMethods.SelectionSort(); break;
-                    case SortTypes.MergeSort: SortMethods.MergeSort(); break;
-                    case SortTypes.QuickSort: SortMethods.QuickSort(); break;
-                    case SortTypes.HeapSort: SortMethods.HeapSort(); break;
+                    case SortTypes.BubbleSort: await SortMethods.BubbleSort(); break;
+                    case SortTypes.InsertionSort: await SortMethods.InsertionSort(); break;
+                    case SortTypes.SelectionSort: await SortMethods.SelectionSort(); break;
+                    case SortTypes.MergeSort: await SortMethods.MergeSort(); break;
+                    case SortTypes.QuickSort: await SortMethods.QuickSort(); break;
+                    case SortTypes.HeapSort: await SortMethods.HeapSort(); break;
                 }
+
+                this.delay = initialDelay //Reset it to default value if set to 0 to stop
+                this.isSorting = false
+                this.isSorted = true
 
             }
         }
