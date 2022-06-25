@@ -1,13 +1,6 @@
 import { useArrayStore } from '../stores/array'
 import { swap, move, waitForMs } from './utilities'
 
-
-export const QuickSort = async () => {
-    console.log("Quick Sort")
-    const arrayStore = useArrayStore()
-
-}
-
 export const HeapSort = async () => {
     console.log("Heap Sort")
     const arrayStore = useArrayStore()
@@ -18,7 +11,132 @@ export const HeapSort = async () => {
 
 
 
-export const MergeSort = async () => {//PROBLEM, INFINITE RECURSION
+export const QuickSort = async () => {
+    console.log("Quick Sort")
+
+    const arrayStore = useArrayStore()
+
+    await QuickSortStep(arrayStore, 0, arrayStore.arrayLength-1)
+
+    
+}
+
+
+const QuickSortStep = async (arrayStore, start, end) => {
+
+    if(start < end){
+        //We choose an adequate pivot using the "median-of-three" method
+        let pivot = await choosePivot(arrayStore, start, end)
+
+        //We place the pivot in the right place
+        pivot = await placePivot(arrayStore, start, end, pivot)
+
+        //Recursively call the function on the left and right of the pivot
+        await QuickSortStep(arrayStore, start, pivot - 1)//Left
+        await QuickSortStep(arrayStore, pivot + 1, end)//Right
+
+    }else{
+        //Visualization (sorted)
+        arrayStore.colorsArray[start] = 3
+    }
+
+
+
+}
+
+const choosePivot = async (arrayStore, start, end) => {
+    //We use the median of three method to try to find the best pivot
+
+    const a = arrayStore.array[start]
+    const c = arrayStore.array[end]
+
+    const middleIndex = Math.floor((start + end) / 2)
+    const b = arrayStore.array[middleIndex]
+    
+    //Visualization (comparison)
+    arrayStore.colorsArray[start] = 1
+    arrayStore.colorsArray[middleIndex] = 1
+    arrayStore.colorsArray[end] = 1
+    await waitForMs(arrayStore.delay)
+
+    //Visualization (reset comparison)
+    arrayStore.colorsArray[start] = 0
+    arrayStore.colorsArray[middleIndex] = 0
+    arrayStore.colorsArray[end] = 0
+
+    // x is positive if a is greater than b.
+    // x is negative if b is greater than a.
+    const x = a - b;
+    const y = b - c;
+    const z = a - c;
+    // Checking if b is middle (x and y both are positive)
+    if (x * y > 0) {
+        return middleIndex;
+    }else if (x * z > 0){
+        return end;
+    }else{
+        return start;
+    }
+
+    
+}
+
+const placePivot = async (arrayStore, start, end, pivot) => {
+
+    //We put the pivot at the start
+    await swap(pivot, start, arrayStore.delay)
+    pivot = start
+
+    //Foreach item except the pivot
+    for(let i=start+1; i<=end; i++){
+
+        //Visualization (comparison)
+        arrayStore.colorsArray[i] = 1
+        arrayStore.colorsArray[pivot] = 1
+        await waitForMs(arrayStore.delay)
+
+
+        if(arrayStore.array[i] < arrayStore.array[pivot]){
+
+            //Visualization (before move)
+            arrayStore.colorsArray[i] = 2
+            arrayStore.colorsArray[pivot] = 0
+            await waitForMs(arrayStore.delay / 2)
+
+            move(i, pivot)//Move every smaller items before the pivot
+
+            //Visualization (after move)
+            arrayStore.colorsArray[pivot] = 2
+            arrayStore.colorsArray[i] = 0
+            await waitForMs(arrayStore.delay / 2)
+
+
+            pivot++//It causes the pivot to increment index
+                    
+        
+            //Visualization (not sorted)
+            arrayStore.colorsArray[pivot - 1] = 0
+
+        }else{
+            //Visualization (not sorted)
+            arrayStore.colorsArray[pivot] = 0
+        }
+        arrayStore.colorsArray[i] = 0
+    }    
+
+    //Visualization (sorted)
+    arrayStore.colorsArray[pivot] = 3
+
+    return pivot
+
+
+}
+
+
+
+
+
+export const MergeSort = async () => {
     console.log("Merge Sort")
     const arrayStore = useArrayStore()
 
@@ -55,7 +173,7 @@ const merge = async (arrayStore, leftStart, middle, rightEnd) => {
 
             await waitForMs(arrayStore.delay / 2)
 
-            arrayStore.array = move(arrayStore.array, middle, leftStart + i)//On insère le premier élément de l'array de droite dès que l'on peut
+            move(middle, leftStart + i)//On insère le premier élément de l'array de droite dès que l'on peut
 
             //Visualization (after move)
             arrayStore.colorsArray[middle] = 3

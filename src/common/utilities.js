@@ -1,7 +1,7 @@
 import { useArrayStore } from "../stores/array";
 
 export const waitForMs = (ms) => {
-    if (ms == 0) return Promise.resolve()
+    if (ms == 0) return 
 
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -34,19 +34,19 @@ export const remove = (array, index) => {
     return array
 }
 
-export const move = (array, start, target) => {
+export const move = (start, target) => {
+    const arrayStore = useArrayStore()
+
     if (start > target) {
-        array = insert(array, array[start], target) //On l'insère l'élément au bon endroit
+        arrayStore.array = insert(arrayStore.array, arrayStore.array[start], target) //On l'insère l'élément au bon endroit
 
-        array = remove(array, start + 1);//Puis on supprime celui d'origine
+        arrayStore.array = remove(arrayStore.array, start + 1);//Puis on supprime celui d'origine
 
-        return array
     } else {
-        array = insert(array, array[start], target) //On l'insère l'élément au bon endroit
+        arrayStore.array = insert(arrayStore.array, arrayStore.array[start], target) //On l'insère l'élément au bon endroit
 
-        array = remove(array, start);//Puis on supprime celui d'origine
+        arrayStore.array = remove(arrayStore.array, start);//Puis on supprime celui d'origine
 
-        return array
     }
 
 }
